@@ -1,4 +1,11 @@
 <style>
+	body
+	{
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		user-select: none;  
+		font-family:Arial;
+	}
 	div.pointerOkey
 	{
 		width:15px;
@@ -21,6 +28,45 @@
 	{
 		
 	}
+	
+	div.container
+	{
+		overflow:hidden;
+		width:100%;
+		text-align:center;
+	}
+	div.container div.box
+	{
+		width:90px;
+		display:inline-block;
+		border:1px solid #999;
+		border-radius:5px;
+		cursor:pointer;
+	}
+	div.container div.box.active
+	{
+		border:1px solid #000;
+	}
+	div.container div.box div.title
+	{
+		padding:5px;
+		background:#CCC;
+		text-align:center;
+		font-weight:600;
+	}
+	
+	div.container div.box.active div.title
+	{
+		background:#AAA;
+	}
+	
+	div.containerFloor
+	{
+		text-align:center;
+		margin:auto;
+		width:500px;
+		border:1px solid #AAA;
+	}
 </style>
 <script>
 	function addPointer()
@@ -30,20 +76,68 @@
 		document.getElementById("map").appendChild(pointer);
 		return pointer;
 	}
+	var backSelect = null;
 	function main()
 	{
 		var point1 = addPointer();
 		point1.onclick = function()
 		{
-			alert(1);
+			
 		}
+		
+		var listBoxMap = document.getElementsByClassName('box');
+		var listLength = listBoxMap.length;
+		var i =0,o;
+		while(i<listLength)
+		{
+			o = listBoxMap[i++];
+			o.onclick = selectFloor;
+			o.setAttribute('name','floor'+i);
+		}
+		backSelect = document.getElementById("firstFloor");
+	}
+	
+	
+	function selectFloor()
+	{
+		var name = this.getAttribute('name');
+		var floor = document.getElementById('titleFloor');
+		switch(name)
+		{
+			case 'floor1':
+				floor.innerText = "1 этаж";
+			break;
+			case 'floor2':
+				floor.innerText = "2 этаж";
+			break;
+			case 'floor3':
+				floor.innerText = "3 этаж";
+			break;
+		}
+		this.className = "box active";
+		if (backSelect != null && backSelect != this)backSelect.className = "box";
+		backSelect = this;
 	}
 </script>
 <body onload="main();">
-	<div>
-		<div class="title">2 Этаж</div>
+	<div class="containerFloor">
+		<div id="titleFloor" class="title">1 этаж</div>
 		<div id="map" class="map">
 			
+		</div>
+	</div>
+	<div class="container">
+		<div id="firstFloor" class="box active">
+			<div class="title">1 этаж</div>
+			<div>Картинка</div>
+		</div>
+		<div class="box">
+			<div class="title">2 этаж</div>
+			<div>Картинка</div>
+		</div>
+		<div class="box">
+			<div class="title">3 этаж</div>
+			<div>Картинка</div>
 		</div>
 	</div>
 </body>
