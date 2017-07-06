@@ -1,0 +1,49 @@
+<style>
+	div.pointerOkey
+	{
+		width:15px;
+		height:15px;
+		border-radius:50%;
+		background:green;
+		cursor:pointer;
+	}
+	
+	div.pointerError
+	{
+		width:15px;
+		height:15px;
+		border-radius:50%;
+		background:red;
+		cursor:pointer;
+	}
+	
+	div.popup
+	{
+		
+	}
+</style>
+<script>
+	function addPointer()
+	{
+		var pointer = document.createElement("DIV");
+		pointer.className = 'pointerOkey';
+		document.getElementById("map").appendChild(pointer);
+		return pointer;
+	}
+	function main()
+	{
+		var point1 = addPointer();
+		point1.onclick = function()
+		{
+			alert(1);
+		}
+	}
+</script>
+<body onload="main();">
+	<div>
+		<div class="title">2 Этаж</div>
+		<div id="map" class="map">
+			
+		</div>
+	</div>
+</body>
