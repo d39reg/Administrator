@@ -65,6 +65,7 @@
 				cursor:pointer;
 				background-size:cover;
 				box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+				-webkit-tap-highlight-color: rgba(255,255,255,0.2);
 			}
 			div.container div.box.active
 			{
@@ -83,6 +84,11 @@
 			div.container div.box.active div.title
 			{
 				background:#AAA;
+			}
+			
+			div.container div.box:active
+			{
+				
 			}
 			
 			div.containerFloor
@@ -122,6 +128,30 @@
 				font-weight:600;
 				font-size:16px;
 				display:inline-block;
+			}
+			div.settings
+			{
+				background-repeat:no-repeat;
+				background-position:50% 50%;
+				background-size:contain;
+				background-image:url(setting.png);
+				position:fixed;
+				right:0px;
+				top:0px;
+				margin:5px;
+				padding:15px;
+			}
+			div.layout
+			{
+				width:100%;
+				height:100%;
+				overflow-x:hidden;
+				overflow-y:auto;
+				display:none;
+			}
+			div.layout.show
+			{
+				display:block;
 			}
 		</style>
 		<script>
@@ -260,27 +290,41 @@
 				currentDate = arrayMonth[currentMonth]+' '+currentYear;
 				document.getElementById('dateCurrent').innerText = currentDate;
 			}
+			
+			function showSettings()
+			{
+				document.getElementById('main').style.display = 'none';
+			}
 		</script>
 	</head>
 	<body onload="main();">
-		<div class="containerFloor">
-			<div class="dateNav" onclick="backDate();"><</div>&nbsp;<div class="dateNav" id="dateCurrent"></div>&nbsp;<div onclick="nextDate();" class="dateNav">></div>
-			<div id="titleFloor" class="title">1 этаж</div>
-			<div id="map" class="map"></div>
+		<div class="layout show" id="main">
+			<div class="containerFloor">
+				<div class="dateNav" onclick="backDate();"><</div>&nbsp;
+				<div class="dateNav" id="dateCurrent"></div>&nbsp;
+				<div onclick="nextDate();" class="dateNav">></div>
+				<div class="settings" onclick="showSettings();"></div>
+				
+				<div id="titleFloor" class="title">1 этаж</div>
+				<div id="map" class="map"></div>
+			</div>
+			<div class="container">
+				<div id="firstFloor" class="box active">
+					<div class="title">1 этаж</div>
+				</div>
+				<div class="box">
+					<div class="title">2 этаж</div>
+				</div>
+				<div class="box">
+					<div class="title">3 этаж</div>
+				</div>
+				<div class="box">
+					<div class="title">4 этаж</div>
+				</div>
+			</div>
 		</div>
-		<div class="container">
-			<div id="firstFloor" class="box active">
-				<div class="title">1 этаж</div>
-			</div>
-			<div class="box">
-				<div class="title">2 этаж</div>
-			</div>
-			<div class="box">
-				<div class="title">3 этаж</div>
-			</div>
-			<div class="box">
-				<div class="title">4 этаж</div>
-			</div>
+		<div class="layout" id="setting">
+			Настройки
 		</div>
 	</body>
 </html>
