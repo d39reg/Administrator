@@ -1,143 +1,267 @@
-<style>
-	body
-	{
-		-moz-user-select: none;
-		-khtml-user-select: none;
-		user-select: none;  
-		font-family:Arial;
-	}
-	div.pointerOkey
-	{
-		width:15px;
-		height:15px;
-		border-radius:50%;
-		background:green;
-		cursor:pointer;
-	}
-	
-	div.pointerError
-	{
-		width:15px;
-		height:15px;
-		border-radius:50%;
-		background:red;
-		cursor:pointer;
-	}
-	
-	div.popup
-	{
-		
-	}
-	
-	div.container
-	{
-		overflow:hidden;
-		width:100%;
-		text-align:center;
-	}
-	div.container div.box
-	{
-		width:90px;
-		display:inline-block;
-		border:1px solid #999;
-		border-radius:5px;
-		cursor:pointer;
-	}
-	div.container div.box.active
-	{
-		border:1px solid #000;
-	}
-	div.container div.box div.title
-	{
-		padding:5px;
-		background:#CCC;
-		text-align:center;
-		font-weight:600;
-	}
-	
-	div.container div.box.active div.title
-	{
-		background:#AAA;
-	}
-	
-	div.containerFloor
-	{
-		text-align:center;
-		margin:auto;
-		width:500px;
-		border:1px solid #AAA;
-	}
-</style>
-<script>
-	function addPointer()
-	{
-		var pointer = document.createElement("DIV");
-		pointer.className = 'pointerOkey';
-		document.getElementById("map").appendChild(pointer);
-		return pointer;
-	}
-	var backSelect = null;
-	function main()
-	{
-		var point1 = addPointer();
-		point1.onclick = function()
-		{
+<html>
+	<head>
+		<title>Администратор</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			body
+			{
+				-moz-user-select: none;
+				-khtml-user-select: none;
+				user-select: none;  
+				font-family:Arial;
+				cursor:default;
+				margin:0px;
+				padding:0px;
+			}
+			div.pointerOkey
+			{
+				width:15px;
+				height:15px;
+				border-radius:50%;
+				background:green;
+				cursor:pointer;
+			}
 			
-		}
-		
-		var listBoxMap = document.getElementsByClassName('box');
-		var listLength = listBoxMap.length;
-		var i =0,o;
-		while(i<listLength)
-		{
-			o = listBoxMap[i++];
-			o.onclick = selectFloor;
-			o.setAttribute('name','floor'+i);
-		}
-		backSelect = document.getElementById("firstFloor");
-	}
-	
-	
-	function selectFloor()
-	{
-		var name = this.getAttribute('name');
-		var floor = document.getElementById('titleFloor');
-		switch(name)
-		{
-			case 'floor1':
-				floor.innerText = "1 этаж";
-			break;
-			case 'floor2':
-				floor.innerText = "2 этаж";
-			break;
-			case 'floor3':
-				floor.innerText = "3 этаж";
-			break;
-		}
-		this.className = "box active";
-		if (backSelect != null && backSelect != this)backSelect.className = "box";
-		backSelect = this;
-	}
-</script>
-<body onload="main();">
-	<div class="containerFloor">
-		<div id="titleFloor" class="title">1 этаж</div>
-		<div id="map" class="map">
+			div.pointerError
+			{
+				width:15px;
+				height:15px;
+				border-radius:50%;
+				background:red;
+				cursor:pointer;
+			}
 			
+			div.popup
+			{
+				
+			}
+			
+			div.container
+			{
+				overflow:hidden;
+				text-align:center;
+				margin:auto;
+			}
+			div.container div.box
+			{
+				width:100px;
+				height:100px;
+				display:inline-block;
+				border:1px solid #999;
+				border-top:none;
+				border-bottom-left-radius:5px;
+				border-bottom-right-radius:5px;
+				cursor:pointer;
+				background-size:cover;
+			}
+			div.container div.box.active
+			{
+				border:1px solid #000;
+				border-top:none;
+			}
+			div.container div.box div.title
+			{
+				padding:5px;
+				background:#CCC;
+				text-align:center;
+				font-weight:600;
+			}
+			
+			div.container div.box.active div.title
+			{
+				background:#AAA;
+			}
+			
+			div.containerFloor
+			{
+				text-align:center;
+				margin:auto;
+				border:1px solid #AAA;
+			}
+			div.containerFloor div.title
+			{
+				font-weight:600;
+			}
+			
+			div.containerFloor div.map div
+			{
+				display:none;
+			}
+			div.containerFloor div.map div.floor
+			{
+				background-size:contain;
+				width:100%;
+				height:calc(100% - 150px);
+				background-repeat:no-repeat;
+				background-position:50% 50%;
+			}
+			div.containerFloor div.map div.floor.first
+			{
+				display:block;
+			}
+			div#dateCurrent
+			{
+				font-weight:600;
+				font-size:16px;
+			}
+			div.dateNav
+			{
+				display:inline-block;
+			}
+		</style>
+		<script>
+			var arrayMonth = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+			var date = new Date();
+			var currentMonth = date.getMonth();
+			var currentYear = date.getFullYear();
+			var currentDate = arrayMonth[currentMonth]+' '+currentYear;
+			function addPointer()
+			{
+				var pointer = document.createElement("DIV");
+				pointer.className = 'pointerOkey';
+				document.getElementById("map").appendChild(pointer);
+				return pointer;
+			}
+			
+			function setCookie(name, value, options)
+			{
+			  options = options || {};
+
+			  var expires = options.expires;
+
+			  if (typeof expires == "number" && expires) {
+				var d = new Date();
+				d.setTime(d.getTime() + expires * 1000);
+				expires = options.expires = d;
+			  }
+			  if (expires && expires.toUTCString) {
+				options.expires = expires.toUTCString();
+			  }
+
+			  value = encodeURIComponent(value);
+
+			  var updatedCookie = name + "=" + value;
+
+			  for (var propName in options) {
+				updatedCookie += "; " + propName;
+				var propValue = options[propName];
+				if (propValue !== true) {
+				  updatedCookie += "=" + propValue;
+				}
+			  }
+
+			  document.cookie = updatedCookie;
+			}
+			
+			function getCookie(name)
+			{
+			  var matches = document.cookie.match(new RegExp(
+				"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+			  ));
+			  return matches ? decodeURIComponent(matches[1]) : undefined;
+			}
+
+			var backSelect = null, backOFloor;
+			function main()
+			{
+				//var point1 = addPointer();
+				//point1.onclick = function()
+				//{
+					
+				//}
+				
+				var listBoxMap = document.getElementsByClassName('box');
+				var listLength = listBoxMap.length;
+				var i =0,o;
+				while(i<listLength)
+				{
+					var oMap = document.createElement('DIV');
+					if(!i) oMap.className = 'floor first';
+					else oMap.className = 'floor';
+					document.getElementById('map').appendChild(oMap);
+					o = listBoxMap[i++];
+					oMap.id = 'floor'+i;
+					oMap.style.backgroundImage = "url(floor"+i+".jpg)";
+					o.onclick = selectFloor;
+					o.setAttribute('name','floor'+i);
+					o.style.backgroundImage = "url(floor"+i+".jpg)";
+				}
+				backSelect = document.getElementById("firstFloor");
+				backOFloor = document.getElementById("floor1");
+				document.getElementById('dateCurrent').innerText = currentDate;
+			}
+			
+			var backNameFloor='floor1';
+			function selectFloor()
+			{
+				var name = this.getAttribute('name');
+				if (name == backNameFloor) return false;
+				backNameFloor = name;
+				var floor = document.getElementById('titleFloor');
+				var oFloor = document.getElementById(name);
+				if (oFloor != backOFloor)
+				{
+					oFloor.style.display = 'block';
+					backOFloor.style.display = 'none';
+				}
+				backOFloor = oFloor;
+				switch(name)
+				{
+					case 'floor1':
+						floor.innerText = "1 этаж";
+					break;
+					case 'floor2':
+						floor.innerText = "2 этаж";
+					break;
+					case 'floor3':
+						floor.innerText = "3 этаж";
+					break;
+				}
+				this.className = "box active";
+				if (backSelect != null && backSelect != this)backSelect.className = "box";
+				backSelect = this;
+				return true;
+			}
+			function backDate()
+			{
+				if(--currentMonth < 0)
+				{
+					currentMonth = 11;
+					--currentYear;
+				}
+				currentDate = arrayMonth[--currentMonth]+' '+currentYear;
+				document.getElementById('dateCurrent').innerText = currentDate;
+			}
+			function nextDate()
+			{
+				if(++currentMonth > 11)
+				{
+					currentMonth = 0;
+					++currentYear;
+				}
+				currentDate = arrayMonth[currentMonth]+' '+currentYear;
+				document.getElementById('dateCurrent').innerText = currentDate;
+			}
+		</script>
+	</head>
+	<body onload="main();">
+		<div class="containerFloor">
+			<div class="dateNav" onclick="backDate();"><</div><div class="dateNav" id="dateCurrent"></div><div onclick="nextDate();" class="dateNav">></div>
+			<div id="titleFloor" class="title">1 этаж</div>
+			<div id="map" class="map">
+			</div>
 		</div>
-	</div>
-	<div class="container">
-		<div id="firstFloor" class="box active">
-			<div class="title">1 этаж</div>
-			<div>Картинка</div>
+		<div class="container">
+			<div id="firstFloor" class="box active">
+				<div class="title">1 этаж</div>
+			</div>
+			<div class="box">
+				<div class="title">2 этаж</div>
+			</div>
+			<div class="box">
+				<div class="title">3 этаж</div>
+			</div>
 		</div>
-		<div class="box">
-			<div class="title">2 этаж</div>
-			<div>Картинка</div>
-		</div>
-		<div class="box">
-			<div class="title">3 этаж</div>
-			<div>Картинка</div>
-		</div>
-	</div>
-</body>
+	</body>
+</html>
