@@ -14,6 +14,10 @@
 				margin:0px;
 				padding:0px;
 			}
+			div
+			{
+				outline:none;
+			}
 			div.pointerOkey
 			{
 				width:15px;
@@ -21,6 +25,9 @@
 				border-radius:50%;
 				background:green;
 				cursor:pointer;
+				position:relative;
+				left:0px;
+				top:0px;
 			}
 			
 			div.pointerError
@@ -39,9 +46,12 @@
 			
 			div.container
 			{
-				overflow:hidden;
+				overflow-x:auto;
+				overflow-y: hidden;
 				text-align:center;
 				margin:auto;
+				white-space: nowrap;
+				height:112px;
 			}
 			div.container div.box
 			{
@@ -54,11 +64,13 @@
 				border-bottom-right-radius:5px;
 				cursor:pointer;
 				background-size:cover;
+				box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 			}
 			div.container div.box.active
 			{
 				border:1px solid #000;
 				border-top:none;
+				box-shadow: 0 4px 5px rgba(0,0,0,0.3);
 			}
 			div.container div.box div.title
 			{
@@ -77,7 +89,7 @@
 			{
 				text-align:center;
 				margin:auto;
-				border:1px solid #AAA;
+				border-bottom:1px solid #AAA;
 			}
 			div.containerFloor div.title
 			{
@@ -107,6 +119,8 @@
 			}
 			div.dateNav
 			{
+				font-weight:600;
+				font-size:16px;
 				display:inline-block;
 			}
 		</style>
@@ -116,11 +130,12 @@
 			var currentMonth = date.getMonth();
 			var currentYear = date.getFullYear();
 			var currentDate = arrayMonth[currentMonth]+' '+currentYear;
-			function addPointer()
+			function addPointer(floor,x,y)
 			{
 				var pointer = document.createElement("DIV");
 				pointer.className = 'pointerOkey';
-				document.getElementById("map").appendChild(pointer);
+				pointer.style.left = "calc(50% - "+x+")";
+				document.getElementById("floor"+floor).appendChild(pointer);
 				return pointer;
 			}
 			
@@ -165,7 +180,7 @@
 			var backSelect = null, backOFloor;
 			function main()
 			{
-				//var point1 = addPointer();
+				
 				//point1.onclick = function()
 				//{
 					
@@ -190,6 +205,8 @@
 				backSelect = document.getElementById("firstFloor");
 				backOFloor = document.getElementById("floor1");
 				document.getElementById('dateCurrent').innerText = currentDate;
+				
+				var point1 = addPointer(1,"2%");
 			}
 			
 			var backNameFloor='floor1';
@@ -247,10 +264,9 @@
 	</head>
 	<body onload="main();">
 		<div class="containerFloor">
-			<div class="dateNav" onclick="backDate();"><</div><div class="dateNav" id="dateCurrent"></div><div onclick="nextDate();" class="dateNav">></div>
+			<div class="dateNav" onclick="backDate();"><</div>&nbsp;<div class="dateNav" id="dateCurrent"></div>&nbsp;<div onclick="nextDate();" class="dateNav">></div>
 			<div id="titleFloor" class="title">1 этаж</div>
-			<div id="map" class="map">
-			</div>
+			<div id="map" class="map"></div>
 		</div>
 		<div class="container">
 			<div id="firstFloor" class="box active">
@@ -261,6 +277,9 @@
 			</div>
 			<div class="box">
 				<div class="title">3 этаж</div>
+			</div>
+			<div class="box">
+				<div class="title">4 этаж</div>
 			</div>
 		</div>
 	</body>
