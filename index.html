@@ -102,7 +102,12 @@
 			{
 				font-weight:600;
 			}
-			
+			div.containerFloor div.map
+			{
+				overflow:auto;
+				width:100%;
+				height:calc(100% - 160px);
+			}
 			div.containerFloor div.map div
 			{
 				display:none;
@@ -111,7 +116,7 @@
 			{
 				background-size:contain;
 				width:100%;
-				height:calc(100% - 160px);
+				height:100%;
 				background-repeat:no-repeat;
 				background-position:50% 50%;
 			}
@@ -237,7 +242,7 @@
 				backOFloor = document.getElementById("floor1");
 				document.getElementById('dateCurrent').innerText = currentDate;
 				
-				var point1 = addPointer(1,"2%");
+				//var point1 = addPointer(1,"2%");
 			}
 			
 			var backNameFloor='floor1';
@@ -296,10 +301,29 @@
 			{
 				document.getElementById('main').style.display = 'none';
 			}
+			
+			var sizeMaps = [];
+			function plusSizeMap()
+			{
+				var id = backOFloor.id;
+				if(sizeMaps[id]==undefined)sizeMaps[id]=100;
+				sizeMaps[id]+=50;
+				backOFloor.style.width = backOFloor.style.height = sizeMaps[id]+'%';
+			}
+			function minusSizeMap()
+			{
+				var id = backOFloor.id;
+				if(sizeMaps[id]==undefined)sizeMaps[id]=100;
+				if(sizeMaps[id]==100) return false;
+				sizeMaps[id]-=50;
+				backOFloor.style.width = backOFloor.style.height = sizeMaps[id]+'%';
+			}
 		</script>
 	</head>
 	<body onload="main();">
 		<div class="layout show" id="main">
+			<div style="position:fixed;left:5px;top:-2px;font-weight:600;font-size:35px;" onclick="plusSizeMap();">+</div>
+			<div style="position:fixed;left:40px;top:-12px;font-weight:600;font-size:45px;" onclick="minusSizeMap();">-</div>
 			<div class="containerFloor">
 				<div class="dateNav" onclick="backDate();"><</div>&nbsp;
 				<div class="dateNav" id="dateCurrent"></div>&nbsp;
