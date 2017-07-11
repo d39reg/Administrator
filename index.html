@@ -21,8 +21,9 @@
 			}
 			div.pointerOkey
 			{
-				width:15px;
-				height:15px;
+				width:0px;
+				height:0px;
+				padding:10px;
 				border-radius:50%;
 				background:green;
 				cursor:pointer;
@@ -33,8 +34,8 @@
 			
 			div.pointerError
 			{
-				width:15px;
-				height:15px;
+				width:1%;
+				height:1%;
 				border-radius:50%;
 				background:red;
 				cursor:pointer;
@@ -108,10 +109,6 @@
 				width:100%;
 				height:calc(100% - 160px);
 			}
-			div.containerFloor div.map div
-			{
-				display:none;
-			}
 			div.containerFloor div.map div.floor
 			{
 				background-size:contain;
@@ -119,6 +116,7 @@
 				height:100%;
 				background-repeat:no-repeat;
 				background-position:50% 50%;
+				display:none;
 			}
 			div.containerFloor div.map div.floor.first
 			{
@@ -140,7 +138,7 @@
 				background-repeat:no-repeat;
 				background-position:50% 50%;
 				background-size:contain;
-				background-image:url(setting.png);
+				background-image:url(settings.svg);
 				position:fixed;
 				right:0px;
 				top:0px;
@@ -166,12 +164,21 @@
 			var currentMonth = date.getMonth();
 			var currentYear = date.getFullYear();
 			var currentDate = arrayMonth[currentMonth]+' '+currentYear;
+			var offsetXY = 0;
+			var dbPointers = [],dbIP = 0;
+			var floorData = [0,0.73,0.93,0,0,0],fdCount=0;
 			function addPointer(floor,x,y)
 			{
 				var pointer = document.createElement("DIV");
 				pointer.className = 'pointerOkey';
-				pointer.style.left = "calc(50% - "+x+")";
+				pointer.style.left = backOFloor.offsetWidth/2 - floorData[floor]*backOFloor.offsetHeight/2 * x;
+				pointer.style.top = backOFloor.offsetHeight/2 * y;
 				document.getElementById("floor"+floor).appendChild(pointer);
+				pointer.onclick = function()
+				{
+					addUser(floor,dbIP);
+				}
+				dbPointers[dbIP++] = [pointer,x,y,floorData[floor]];
 				return pointer;
 			}
 			
@@ -214,6 +221,7 @@
 			}
 
 			var backSelect = null, backOFloor;
+			
 			function main()
 			{
 				
@@ -221,30 +229,49 @@
 				//{
 					
 				//}
+				//offsetX = backOFloor.offsetWidth;
 				
 				var listBoxMap = document.getElementsByClassName('box');
 				var listLength = listBoxMap.length;
 				var i =0,o;
+				backSelect = document.getElementById("firstFloor");
+				document.getElementById('dateCurrent').innerText = currentDate;
 				while(i<listLength)
 				{
 					var oMap = document.createElement('DIV');
-					if(!i) oMap.className = 'floor first';
+					if(!i)
+					{
+						oMap.className = 'floor first';
+						backOFloor = oMap;
+					}
 					else oMap.className = 'floor';
 					document.getElementById('map').appendChild(oMap);
 					o = listBoxMap[i++];
 					oMap.id = 'floor'+i;
-					oMap.style.backgroundImage = "url(floor"+i+".jpg)";
+					var src = "floor"+i+".jpg";
+					oMap.style.backgroundImage = 'url('+src+')';
 					o.onclick = selectFloor;
 					o.setAttribute('name','floor'+i);
-					o.style.backgroundImage = "url(floor"+i+".jpg)";
+					o.style.backgroundImage = 'url('+src+')';
+					
+					switch(i)
+					{
+						case 1:
+							var point1 = addPointer(i,0.35,0.8);
+							var point2 = addPointer(i,-0.35,0.5);
+						break;
+						case 2:
+							var point1 = addPointer(i,0,1.3);
+							var point2 = addPointer(i,0.3,0.5);
+						break;
+					}
 				}
-				backSelect = document.getElementById("firstFloor");
-				backOFloor = document.getElementById("floor1");
-				document.getElementById('dateCurrent').innerText = currentDate;
 				
-				//var point1 = addPointer(1,"2%");
 			}
-			
+			window.onresize = function()
+			{
+				updatePointers();
+			}
 			var backNameFloor='floor1';
 			function selectFloor()
 			{
@@ -274,6 +301,7 @@
 				this.className = "box active";
 				if (backSelect != null && backSelect != this)backSelect.className = "box";
 				backSelect = this;
+				updatePointers();
 				return true;
 			}
 			function backDate()
@@ -303,12 +331,27 @@
 			}
 			
 			var sizeMaps = [];
+			function updatePointers()
+			{
+				var i = 0;
+				while(i<dbIP)
+				{
+					var o = dbPointers[i++];
+					var l = o[1];
+					var t = o[2];
+					var k = o[3];
+					var obj = o[0];
+					obj.style.left = backOFloor.offsetWidth/2 -k*backOFloor.offsetHeight/2 * l;
+					obj.style.top = backOFloor.offsetHeight/2 * t;
+				}
+			}
 			function plusSizeMap()
 			{
 				var id = backOFloor.id;
 				if(sizeMaps[id]==undefined)sizeMaps[id]=100;
 				sizeMaps[id]+=50;
 				backOFloor.style.width = backOFloor.style.height = sizeMaps[id]+'%';
+				updatePointers();
 			}
 			function minusSizeMap()
 			{
@@ -317,6 +360,38 @@
 				if(sizeMaps[id]==100) return false;
 				sizeMaps[id]-=50;
 				backOFloor.style.width = backOFloor.style.height = sizeMaps[id]+'%';
+				updatePointers();
+			}
+			var eventX,eventY;
+			function getPositionEvent(event)
+			{
+				eventX = (event.layerX == undefined ? event.offsetX : event.layerX) + 1;
+				eventY = (event.layerY == undefined ? event.offsetY : event.layerY) + 1;
+			}
+			function addNewPoint(o)
+			{
+				//o.innerText = "Сохранить";
+				/*
+				var pointer = document.createElement("DIV");
+				pointer.className = 'pointerOkey';
+				pointer.style.left = "calc(50% - "+x+"%)";
+				pointer.style.top = "calc(50% - "+y+"%)";
+				document.getElementById("floor"+floor).appendChild(pointer);
+				*/
+				
+				
+				
+			}
+			
+			function addUser(floor,id)
+			{
+				document.getElementById('main').style.display = 'none';
+				document.getElementById('addUser').style.display = 'block';
+			}
+			function closeLay(o)
+			{
+				o.parentNode.style.display = 'none';
+				document.getElementById('main').style.display = 'block';
 			}
 		</script>
 	</head>
@@ -324,6 +399,7 @@
 		<div class="layout show" id="main">
 			<div style="position:fixed;left:5px;top:-2px;font-weight:600;font-size:35px;" onclick="plusSizeMap();">+</div>
 			<div style="position:fixed;left:40px;top:-12px;font-weight:600;font-size:45px;" onclick="minusSizeMap();">-</div>
+		<!--<div style="position:fixed;left:90px;top:10px;font-weight:600;font-size:14px;" onclick="addNewPoint(this);">Добавить</div>-->
 			<div class="containerFloor">
 				<div class="dateNav" onclick="backDate();"><</div>&nbsp;
 				<div class="dateNav" id="dateCurrent"></div>&nbsp;
@@ -350,6 +426,9 @@
 		</div>
 		<div class="layout" id="setting">
 			Настройки
+		</div>
+		<div class="layout" id="addUser">
+			<div class="closeLayout" onclick="closeLay(this);">X</div>
 		</div>
 	</body>
 </html>
