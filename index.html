@@ -46,7 +46,7 @@
 				
 			}
 			
-			div.container
+			div.containerX
 			{
 				overflow-x:auto;
 				overflow-y: hidden;
@@ -55,7 +55,7 @@
 				white-space: nowrap;
 				height:112px;
 			}
-			div.container div.box
+			div.containerX div.box
 			{
 				width:100px;
 				height:100px;
@@ -69,13 +69,13 @@
 				box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 				-webkit-tap-highlight-color: rgba(255,255,255,0.2);
 			}
-			div.container div.box.active
+			div.containerX div.box.active
 			{
 				border:1px solid #000;
 				border-top:none;
 				box-shadow: 0 4px 5px rgba(0,0,0,0.3);
 			}
-			div.container div.box div.title
+			div.containerX div.box div.title
 			{
 				padding:5px;
 				background:#CCC;
@@ -83,21 +83,75 @@
 				font-weight:600;
 			}
 			
-			div.container div.box.active div.title
+			div.containerX div.box.active div.title
 			{
 				background:#AAA;
 			}
 			
-			div.container div.box:active
+			div.containerX div.box:active
 			{
 				
 			}
 			
+			div.containerY
+			{
+				overflow-x:hidden;
+				overflow-y: auto;
+				text-align:center;
+				margin:auto;
+				white-space: wrap;
+				width:120px;
+				float:right;
+				position:absolute;
+				left:calc(100% - 120px);
+				top:40px;
+				height:calc(100% - 40px);
+			}
+			div.containerY div.box
+			{
+				width:100px;
+				height:100px;
+				display:inline-block;
+				border:1px solid #999;
+				border-top:none;
+				border-bottom-left-radius:5px;
+				border-bottom-right-radius:5px;
+				cursor:pointer;
+				background-size:cover;
+				box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+				-webkit-tap-highlight-color: rgba(255,255,255,0.2);
+			}
+			div.containerY div.box.active
+			{
+				border:1px solid #000;
+				border-top:none;
+				box-shadow: 0 4px 5px rgba(0,0,0,0.3);
+			}
+			div.containerY div.box div.title
+			{
+				padding:5px;
+				background:#CCC;
+				text-align:center;
+				font-weight:600;
+			}
+			
+			div.containerY div.box.active div.title
+			{
+				background:#AAA;
+			}
+			
+			div.containerY div.box:active
+			{
+				
+			}
+			
+			
 			div.containerFloor
 			{
 				text-align:center;
-				margin:auto;
 				border-bottom:1px solid #AAA;
+				floor:left;
+				height:calc(100% - 160px);
 			}
 			div.containerFloor div.title
 			{
@@ -107,7 +161,7 @@
 			{
 				overflow:auto;
 				width:100%;
-				height:calc(100% - 160px);
+				height:100%;
 			}
 			div.containerFloor div.map div.floor
 			{
@@ -160,6 +214,7 @@
 		</style>
 		<script>
 			var arrayMonth = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+            var horizontalPanel = false;
 			var date = new Date();
 			var currentMonth = date.getMonth();
 			var currentYear = date.getFullYear();
@@ -266,10 +321,14 @@
 						break;
 					}
 				}
-				
+				horizontalPanel = screen.width>screen.height;
+                updatePanel();
+				updatePointers();
 			}
 			window.onresize = function()
 			{
+                horizontalPanel = screen.width>screen.height;
+                updatePanel();
 				updatePointers();
 			}
 			var backNameFloor='floor1';
@@ -368,20 +427,6 @@
 				eventX = (event.layerX == undefined ? event.offsetX : event.layerX) + 1;
 				eventY = (event.layerY == undefined ? event.offsetY : event.layerY) + 1;
 			}
-			function addNewPoint(o)
-			{
-				//o.innerText = "Сохранить";
-				/*
-				var pointer = document.createElement("DIV");
-				pointer.className = 'pointerOkey';
-				pointer.style.left = "calc(50% - "+x+"%)";
-				pointer.style.top = "calc(50% - "+y+"%)";
-				document.getElementById("floor"+floor).appendChild(pointer);
-				*/
-				
-				
-				
-			}
 			
 			function addUser(floor,id)
 			{
@@ -393,23 +438,44 @@
 				o.parentNode.style.display = 'none';
 				document.getElementById('main').style.display = 'block';
 			}
+            function updatePanel()
+            {
+                var panel = document.getElementById("conteinerFloor");
+				var map = document.getElementById("mapFloor");
+				if(horizontalPanel)
+				{
+					panel.className = "containerY";
+					map.style.width = "calc(100% - 130px)";
+					map.style.height = "calc(100% - 50px)";
+					map.style.margin = 'none';
+				}
+				else 
+				{
+					panel.className = "containerX";
+					map.style.width = "98%";
+					map.style.height = "calc(100% - 120px)";
+					map.style.margin = 'auto';
+				}
+            }
 		</script>
 	</head>
 	<body onload="main();">
+	<!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter45279921 = new Ya.Metrika({ id:45279921, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/45279921" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
+	
 		<div class="layout show" id="main">
 			<div style="position:fixed;left:5px;top:-2px;font-weight:600;font-size:35px;" onclick="plusSizeMap();">+</div>
 			<div style="position:fixed;left:40px;top:-12px;font-weight:600;font-size:45px;" onclick="minusSizeMap();">-</div>
 		<!--<div style="position:fixed;left:90px;top:10px;font-weight:600;font-size:14px;" onclick="addNewPoint(this);">Добавить</div>-->
-			<div class="containerFloor">
-				<div class="dateNav" onclick="backDate();"><</div>&nbsp;
-				<div class="dateNav" id="dateCurrent"></div>&nbsp;
-				<div onclick="nextDate();" class="dateNav">></div>
+			<div class="containerFloor" id="mapFloor">
+				<!--<div class="dateNav" onclick="backDate();"><</div>&nbsp;-->
+				<div class="dateNav" id="dateCurrent"></div>
+				<!--<div onclick="nextDate();" class="dateNav">></div>-->
 				<div class="settings" onclick="showSettings();"></div>
 				
 				<div id="titleFloor" class="title">1 этаж</div>
 				<div id="map" class="map"></div>
 			</div>
-			<div class="container">
+			<div id="conteinerFloor" class="containerX">
 				<div id="firstFloor" class="box active">
 					<div class="title">1 этаж</div>
 				</div>
