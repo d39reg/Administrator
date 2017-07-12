@@ -23,22 +23,30 @@
 			{
 				width:0px;
 				height:0px;
-				padding:10px;
+				padding:8px;
 				border-radius:50%;
 				background:green;
 				cursor:pointer;
 				position:relative;
 				left:0px;
 				top:0px;
+				box-shadow: 0 3px 7px rgba(0,64,0,0.5);
+				opacity:0.85;
 			}
 			
 			div.pointerError
 			{
-				width:1%;
-				height:1%;
+				width:0px;
+				height:0px;
+				padding:8px;
 				border-radius:50%;
 				background:red;
 				cursor:pointer;
+				position:relative;
+				left:0px;
+				top:0px;
+				box-shadow: 0 3px 7px rgba(64,0,0,0.5);
+				opacity:0.85;
 			}
 			
 			div.popup
@@ -303,7 +311,7 @@
 					document.getElementById('map').appendChild(oMap);
 					o = listBoxMap[i++];
 					oMap.id = 'floor'+i;
-					var src = "floor"+i+".jpg";
+					var src = "floor"+i+".svg";
 					oMap.style.backgroundImage = 'url('+src+')';
 					o.onclick = selectFloor;
 					o.setAttribute('name','floor'+i);
@@ -321,13 +329,13 @@
 						break;
 					}
 				}
-				horizontalPanel = screen.width>screen.height;
+				horizontalPanel = document.body.offsetWidth>document.body.offsetHeight;
                 updatePanel();
 				updatePointers();
 			}
 			window.onresize = function()
 			{
-                horizontalPanel = screen.width>screen.height;
+                horizontalPanel = document.body.offsetWidth>document.body.offsetHeight;
                 updatePanel();
 				updatePointers();
 			}
